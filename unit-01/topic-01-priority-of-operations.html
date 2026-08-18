@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Priority of Operations — Maths Toolkit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,500;0,600;0,700;1,600;1,700;1,800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+  /* ---------- Page-specific styles for: Priority of Operations ---------- */
+
+  /* HERO */
+  .hero{
+    padding:56px 0 40px;
+    display:grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap:36px;
+    align-items:center;
+    border-bottom:1px solid var(--line);
+  }
+  .hero h1{
+    font-size:clamp(38px, 5.4vw, 64px);
+    line-height:0.98;
+    margin:18px 0 20px;
+    background:var(--grad);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .hero .big-q{
+    font-family:'Inter', sans-serif; font-style:normal; font-weight:600;
+    font-size:18px; color:var(--text); max-width:52ch; margin-bottom:14px;
+  }
+  .hero .sub{color:var(--muted); font-size:15px; max-width:50ch;}
+  .meta-row{display:flex; gap:10px; margin-top:22px; flex-wrap:wrap;}
+
+  .funnel-box{display:flex; align-items:center; justify-content:center; position:relative;}
+  .funnel-box svg{width:100%; max-width:320px; height:auto; filter:drop-shadow(0 0 22px rgba(155,92,255,0.25));}
+  .ring{fill:none; stroke-width:2.6; stroke-linecap:round;}
+  .ring-label{font-family:'JetBrains Mono', monospace; font-size:13px; font-weight:700;}
+  @keyframes spin-dash{ to{ stroke-dashoffset:-200; } }
+  .ring{ stroke-dasharray:2 7; animation: spin-dash 9s linear infinite; }
+  .ring.r2{animation-duration:7.5s; animation-direction:reverse;}
+  .ring.r3{animation-duration:6s;}
+  .ring.r4{animation-duration:4.5s; animation-direction:reverse;}
+  @media (prefers-reduced-motion: reduce){ .ring{animation:none;} }
+
+  /* STUCK / student questions */
+  .stuck-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:16px;}
+  .bubble{
+    background:var(--panel); border:1px solid var(--line); border-radius:var(--radius);
+    padding:20px 22px; position:relative; font-size:15.5px; color:#e6e5f5;
+  }
+  .bubble::before{
+    content:"“"; font-family:'Barlow Condensed', serif; font-size:46px; font-style:italic;
+    position:absolute; top:-6px; left:14px; color:var(--magenta); opacity:0.55;
+  }
+  .bubble p{margin:0; padding-left:14px;}
+
+  /* RULE */
+  .rule-card{
+    background:linear-gradient(160deg, rgba(255,46,200,0.08), rgba(43,232,255,0.05));
+    border:1px solid rgba(255,46,200,0.28); border-radius:var(--radius);
+    padding:30px clamp(20px,4vw,40px);
+  }
+  .rule-card p.statement{
+    font-size:clamp(18px,2.2vw,22px); font-weight:600; color:#fff; margin:0 0 26px; max-width:70ch;
+  }
+  .bidmas-row{display:grid; grid-template-columns:repeat(4,1fr); gap:12px;}
+  .bidmas-tile{
+    border-radius:12px; padding:16px 14px; text-align:center;
+    border:1px solid var(--line); background:rgba(255,255,255,0.02);
+  }
+  .bidmas-tile .letter{
+    font-family:'Barlow Condensed'; font-style:italic; font-weight:800;
+    font-size:34px; display:block; line-height:1;
+  }
+  .bidmas-tile .name{font-size:12px; color:var(--muted); margin-top:6px; display:block;}
+  .bidmas-tile:nth-child(1) .letter{color:var(--magenta);}
+  .bidmas-tile:nth-child(2) .letter{color:#ff7fd6;}
+  .bidmas-tile:nth-child(3) .letter{color:var(--violet);}
+  .bidmas-tile:nth-child(4) .letter{color:var(--cyan);}
+
+  /* WHY / two col */
+  .why-grid{display:grid; grid-template-columns:1fr 1fr; gap:28px;}
+  .why-grid h3{font-size:20px; color:var(--cyan); margin-bottom:10px; font-style:normal; letter-spacing:0.02em;}
+  .why-grid p{color:#d8d7ea; font-size:15px; margin:0;}
+
+  /* WORKED STEPPER */
+  .stepper{background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:clamp(20px,4vw,34px);}
+  .stepper-expr{
+    font-family:'JetBrains Mono', monospace; font-size:clamp(26px,4.2vw,38px);
+    text-align:center; padding:26px 10px; letter-spacing:0.02em;
+  }
+  .stepper-expr .hl{
+    color:var(--bg); background:var(--cyan); border-radius:6px; padding:2px 8px;
+    box-shadow:0 0 18px rgba(43,232,255,0.55);
+  }
+  .stepper-caption{text-align:center; color:var(--muted); font-size:14.5px; min-height:44px; max-width:52ch; margin:0 auto;}
+  .stepper-controls{display:flex; align-items:center; justify-content:center; gap:16px; margin-top:22px;}
+  .dots{display:flex; gap:7px;}
+  .dot{width:7px; height:7px; border-radius:50%; background:var(--line); border:1px solid var(--line);}
+  .dot.active{background:var(--cyan); border-color:var(--cyan); box-shadow:0 0 8px var(--cyan);}
+
+  /* BRACKETS TOGGLE DEMO */
+  .toggle-card{
+    background:var(--panel); border:1px solid var(--line); border-radius:var(--radius);
+    padding:clamp(20px,4vw,34px); display:flex; flex-direction:column; align-items:center; gap:20px;
+  }
+  .toggle-row{display:flex; align-items:center; gap:14px;}
+  .switch{
+    width:52px; height:28px; border-radius:100px; background:var(--panel-2); border:1px solid var(--line);
+    position:relative; cursor:pointer; flex-shrink:0;
+  }
+  .switch .knob{
+    position:absolute; top:2px; left:2px; width:22px; height:22px; border-radius:50%;
+    background:var(--muted); transition:all .2s ease;
+  }
+  .switch.on{background:rgba(255,46,200,0.18); border-color:var(--magenta);}
+  .switch.on .knob{transform:translateX(24px); background:var(--magenta); box-shadow:0 0 10px var(--magenta);}
+  .toggle-label{font-family:'JetBrains Mono', monospace; font-size:13px; color:var(--muted);}
+  .bracket-expr{font-family:'JetBrains Mono', monospace; font-size:clamp(26px,4.5vw,40px); text-align:center;}
+  .bracket-expr .b{color:var(--magenta); opacity:0; transition:opacity .2s ease;}
+  .bracket-expr.show-b .b{opacity:1;}
+  .bracket-result{text-align:center; margin-top:6px;}
+  .bracket-result .val{font-family:'JetBrains Mono', monospace; font-weight:700; font-size:22px; color:var(--cyan); transition:all .2s ease;}
+  .toggle-card.on .bracket-result .val{color:var(--magenta);}
+  .toggle-note{color:var(--muted); font-size:14px; text-align:center; max-width:46ch;}
+
+  /* NO AMBIGUITY STRIP */
+  .strip{
+    display:flex; align-items:center; gap:24px; flex-wrap:wrap;
+    background:var(--panel); border:1px solid var(--line); border-radius:var(--radius);
+    padding:22px 26px;
+  }
+  .strip .expr{font-family:'JetBrains Mono', monospace; font-size:26px; color:var(--cyan);}
+  .strip p{margin:0; color:#d8d7ea; font-size:14.5px; flex:1; min-width:220px;}
+
+  /* MISCONCEPTIONS */
+  .misc-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:16px;}
+  .flip{perspective:1200px; height:220px;}
+  .flip-inner{
+    position:relative; width:100%; height:100%; transition:transform .5s cubic-bezier(.4,.2,.2,1);
+    transform-style:preserve-3d; cursor:pointer;
+  }
+  .flip.flipped .flip-inner{transform:rotateY(180deg);}
+  .flip-face{
+    position:absolute; inset:0; backface-visibility:hidden; border-radius:16px;
+    padding:20px; display:flex; flex-direction:column; justify-content:space-between; border:1px solid var(--line);
+  }
+  .flip-front{background:var(--panel-2);}
+  .flip-front .x{color:var(--magenta); font-family:'JetBrains Mono'; font-size:12px; letter-spacing:0.08em;}
+  .flip-front p{font-size:15px; color:#e6e5f5; margin:10px 0 0;}
+  .flip-front .tap{color:var(--muted-2); font-size:11.5px; font-family:'JetBrains Mono', monospace;}
+  .flip-back{
+    background:linear-gradient(160deg, rgba(43,232,255,0.10), rgba(155,92,255,0.08));
+    transform:rotateY(180deg); border-color:rgba(43,232,255,0.35);
+  }
+  .flip-back .check{color:var(--cyan); font-family:'JetBrains Mono'; font-size:12px; letter-spacing:0.08em;}
+  .flip-back p{font-size:14px; color:#eef; margin:10px 0 0;}
+
+  @media (max-width: 760px){
+    .hero{grid-template-columns:1fr; padding-top:40px;}
+    .funnel-box{order:-1;}
+    .funnel-box svg{max-width:220px;}
+    .stuck-grid, .why-grid, .misc-grid{grid-template-columns:1fr;}
+    .bidmas-row{grid-template-columns:repeat(2,1fr);}
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <p style="padding-top:20px;"><a class="btn" href="../index.html">← All topics</a></p>
+
+  <!-- ============ HERO ============ -->
+  <header class="hero">
+    <div>
+      <span class="eyebrow">Unit 1 · Topic 1 · Number</span>
+      <h1>Priority of<br>Operations</h1>
+      <p class="big-q">How do the rules of order of operations ensure calculations are interpreted correctly?</p>
+      <p class="sub">Every calculation with more than one operation is ambiguous until we agree on a rule for what to do first. BIDMAS is that agreement — follow it below.</p>
+      <div class="meta-row">
+        <span class="tag">GCSE · Number</span>
+        <span class="tag">Interactive</span>
+      </div>
+    </div>
+    <div class="funnel-box">
+      <svg viewBox="0 0 300 360" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="40,30 260,30 150,335" fill="none" stroke="rgba(255,255,255,0.10)" stroke-width="1.5"/>
+        <ellipse class="ring" cx="150" cy="95" rx="86" ry="15" stroke="#ff2ec8"/>
+        <ellipse class="ring r2" cx="150" cy="163" rx="60" ry="12" stroke="#ff7fd6"/>
+        <ellipse class="ring r3" cx="150" cy="231" rx="36" ry="9" stroke="#9b5cff"/>
+        <ellipse class="ring r4" cx="150" cy="292" rx="13" ry="5" stroke="#2be8ff"/>
+        <text x="252" y="99" class="ring-label" fill="#ff2ec8">B</text>
+        <text x="222" y="167" class="ring-label" fill="#ff7fd6">I</text>
+        <text x="198" y="235" class="ring-label" fill="#9b5cff">D·M</text>
+        <text x="175" y="296" class="ring-label" fill="#2be8ff">A·S</text>
+        <circle cx="150" cy="330" r="3" fill="#2be8ff"><animate attributeName="r" values="2;5;2" dur="2.4s" repeatCount="indefinite"/></circle>
+      </svg>
+    </div>
+  </header>
+
+  <!-- ============ WHERE IT GETS CONFUSING ============ -->
+  <section>
+    <div class="section-head">
+      <span class="eyebrow">Where students get stuck</span>
+      <h2>The questions in the room</h2>
+    </div>
+    <div class="stuck-grid">
+      <div class="bubble"><p>How do I know where to start?</p></div>
+      <div class="bubble"><p>Why can't I just work from left to right?</p></div>
+      <div class="bubble"><p>Why do brackets change the answer?</p></div>
+      <div class="bubble"><p>Why does everyone get the same answer if we follow the same rules?</p></div>
+    </div>
+  </section>
+
+  <!-- ============ THE RULE ============ -->
+  <section>
+    <div class="section-head">
+      <span class="eyebrow">The rule</span>
+      <h2>One order, every time</h2>
+    </div>
+    <div class="rule-card">
+      <p class="statement">Calculations must be completed in the order: <b>Brackets</b>, <b>Indices</b>, <b>Division &amp; Multiplication</b>, <b>Addition &amp; Subtraction</b>. Division and multiplication share equal priority and are done left to right; addition and subtraction share equal priority and are done left to right.</p>
+      <div class="bidmas-row">
+        <div class="bidmas-tile"><span class="letter">B</span><span class="name">Brackets</span></div>
+        <div class="bidmas-tile"><span class="letter">I</span><span class="name">Indices</span></div>
+        <div class="bidmas-tile"><span class="letter">DM</span><span class="name">Division &amp; Multiplication</span></div>
+        <div class="bidmas-tile"><span class="letter">AS</span><span class="name">Addition &amp; Subtraction</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ WHY IT MATTERS ============ -->
+  <section>
+    <div class="section-head">
+      <span class="eyebrow">Why it matters</span>
+      <h2>One calculation, one answer</h2>
+    </div>
+    <div class="why-grid">
+      <div class="card">
+        <h3>The explanation</h3>
+        <p>Calculations must be completed in the order above — brackets first, then indices, then division and multiplication (left to right), then addition and subtraction (left to right). Skipping the order, or applying multiplication before division just because "M" comes before "D" in the acronym, gives a different — wrong — result.</p>
+      </div>
+      <div class="card">
+        <h3>Why it's worth knowing</h3>
+        <p>The order of operations prevents ambiguity. Without an agreed rule, the same string of numbers and symbols could be read in several different ways. Following the same rule is what lets two people — or a person and a calculator — always land on the same answer.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ WORKED EXAMPLE STEPPER ============ -->
+  <section>
+    <div class="section-head">
+      <span class="eyebrow">Worked example</span>
+      <h2>Step through it: 12 − 3 × 2</h2>
+    </div>
+    <div class="stepper">
+      <div class="stepper-expr" id="stepExpr"></div>
+      <p class="stepper-caption" id="stepCaption"></p>
+      <div class="stepper-controls">
+        <button class="btn" id="stepPrev">← Back</button>
+        <div class="dots" id="stepDots"></div>
+        <button class="btn primary" id="stepNext">Next →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ BRACKETS CHANGE THE ANSWER ============ -->
+  <section>
+    <div class="section-head">
+      <span class="eyebrow">Why brackets change the answer</span>
+      <h2>Same numbers, different instruction</h2>
+    </div>
+    <div class="toggle-card" id="toggleCard">
+      <div class="bracket-expr" id="bracketExpr">
+        <span class="b">(</span>12 − 3<span class="b">)</span> × 2
+      </div>
+      <div class="bracket-result">Result: <span class="val" id="bracketVal">6</span></div>
+      <div class="toggle-row">
+        <span class="toggle-label">No brackets</span>
+        <div class="switch" id="bracketSwitch"><div class="knob"></div></div>
+        <span class="toggle-label">Add brackets</span>
+      </div>
+      <p class="toggle-note" id="bracketNote">With no brackets, multiplication happens first: 3 × 2 = 6, then 12 − 6 = 6.</p>
+    </div>
+  </section>
+
+  <!-- ============ NO AMBIGUITY STRIP ============ -->
+  <section>
+    <div class="section-head">
+      <span class="eyebrow">A calmer case</span>
+      <h2>When there's nothing to argue about</h2>
+    </div>
+    <div class="strip">
+      <span class="expr">12 ÷ 3 + 2 = 6</span>
+      <p>Only one priority level appears before the addition — there's no multiplication or division tug-of-war. Division is completed first regardless of direction (12 ÷ 3 = 4), then addition (4 + 2 = 6). BIDMAS doesn't need to "kick in" here because there's no competing operation of equal or higher priority to sequence.</p>
+    </div>
+  </section>
+
+  <!-- ============ MISCONCEPTIONS ============ -->
+  <section>
+    <div class="section-head">
+      <span class="eyebrow">Common misconceptions</span>
+      <h2>Tap a card to check yourself</h2>
+    </div>
+    <div class="misc-grid">
+      <div class="flip">
+        <div class="flip-inner">
+          <div class="flip-face flip-front">
+            <div><span class="x">✕ Misconception</span><p>"I'll just work strictly left to right."</p></div>
+            <span class="tap">Tap to reveal</span>
+          </div>
+          <div class="flip-face flip-back">
+            <div><span class="check">✓ Fix</span><p>Left to right only applies <i>within</i> a priority level. Higher-priority operations elsewhere in the expression still go first, e.g. 12 − 3 × 2 = 6, not 18.</p></div>
+          </div>
+        </div>
+      </div>
+      <div class="flip">
+        <div class="flip-inner">
+          <div class="flip-face flip-front">
+            <div><span class="x">✕ Misconception</span><p>"Multiplication always comes before division — M is before D."</p></div>
+            <span class="tap">Tap to reveal</span>
+          </div>
+          <div class="flip-face flip-back">
+            <div><span class="check">✓ Fix</span><p>Division and multiplication share equal priority. The acronym's letter order isn't a ranking — whichever appears first, reading left to right, is done first.</p></div>
+          </div>
+        </div>
+      </div>
+      <div class="flip">
+        <div class="flip-inner">
+          <div class="flip-face flip-front">
+            <div><span class="x">✕ Misconception</span><p>"I can multiply before dealing with the index."</p></div>
+            <span class="tap">Tap to reveal</span>
+          </div>
+          <div class="flip-face flip-back">
+            <div><span class="check">✓ Fix</span><p>Indices are evaluated straight after brackets — before any multiplication or division. Forgetting this step changes the value being multiplied.</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span>GCSE Maths Tools</span>
+    <span>Unit 1 · Topic 1 · Priority of Operations</span>
+  </footer>
+
+</div>
+
+<script>
+  // ---------- Worked example stepper ----------
+  const steps = [
+    { expr: "12 − 3 × 2", caption: "Start with the full expression. Scan it for brackets and indices first — there are none here, so we move to multiplication and division." },
+    { expr: "12 − <span class=\"hl\">3 × 2</span>", caption: "Multiplication and division outrank addition and subtraction, so 3 × 2 is done first, even though it isn't on the left." },
+    { expr: "12 − <span class=\"hl\">6</span>", caption: "3 × 2 = 6. The expression is now a straightforward subtraction." },
+    { expr: "<span class=\"hl\">12 − 6</span> = 6", caption: "Only subtraction remains, so it's evaluated last. 12 − 6 = 6 — the correct, unambiguous answer." }
+  ];
+  let stepIndex = 0;
+  const stepExpr = document.getElementById('stepExpr');
+  const stepCaption = document.getElementById('stepCaption');
+  const stepDots = document.getElementById('stepDots');
+  const stepPrev = document.getElementById('stepPrev');
+  const stepNext = document.getElementById('stepNext');
+
+  steps.forEach(() => {
+    const d = document.createElement('div');
+    d.className = 'dot';
+    stepDots.appendChild(d);
+  });
+
+  function renderStep(){
+    stepExpr.innerHTML = steps[stepIndex].expr;
+    stepCaption.textContent = steps[stepIndex].caption;
+    [...stepDots.children].forEach((d, i) => d.classList.toggle('active', i === stepIndex));
+    stepPrev.disabled = stepIndex === 0;
+    stepNext.textContent = stepIndex === steps.length - 1 ? 'Restart' : 'Next →';
+  }
+  stepPrev.addEventListener('click', () => { if(stepIndex>0){stepIndex--; renderStep();} });
+  stepNext.addEventListener('click', () => {
+    if(stepIndex === steps.length - 1){ stepIndex = 0; } else { stepIndex++; }
+    renderStep();
+  });
+  renderStep();
+
+  // ---------- Brackets toggle demo ----------
+  const bracketSwitch = document.getElementById('bracketSwitch');
+  const bracketExpr = document.getElementById('bracketExpr');
+  const bracketVal = document.getElementById('bracketVal');
+  const bracketNote = document.getElementById('bracketNote');
+  const toggleCard = document.getElementById('toggleCard');
+  let bracketsOn = false;
+
+  bracketSwitch.addEventListener('click', () => {
+    bracketsOn = !bracketsOn;
+    bracketSwitch.classList.toggle('on', bracketsOn);
+    bracketExpr.classList.toggle('show-b', bracketsOn);
+    toggleCard.classList.toggle('on', bracketsOn);
+    if(bracketsOn){
+      bracketVal.textContent = '18';
+      bracketNote.textContent = 'With brackets, the subtraction is forced to happen first: 12 − 3 = 9, then 9 × 2 = 18. Same numbers, different instruction, different answer.';
+    } else {
+      bracketVal.textContent = '6';
+      bracketNote.textContent = 'With no brackets, multiplication happens first: 3 × 2 = 6, then 12 − 6 = 6.';
+    }
+  });
+
+  // ---------- Misconception flip cards ----------
+  document.querySelectorAll('.flip').forEach(card => {
+    card.addEventListener('click', () => card.classList.toggle('flipped'));
+  });
+</script>
+
+</body>
+</html>

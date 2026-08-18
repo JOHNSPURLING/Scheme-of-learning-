@@ -1,0 +1,114 @@
+/* ============================================================
+   TEMPEST — shared design system
+   Used by every page in this site (menu + all lesson pages).
+   Edit values here to update the whole site at once.
+   ============================================================ */
+
+:root{
+  --bg: #07070c;
+  --panel: #0f0f18;
+  --panel-2: #151522;
+  --line: rgba(155,140,255,0.16);
+  --magenta: #ff2ec8;
+  --violet: #9b5cff;
+  --cyan: #2be8ff;
+  --text: #f4f4fb;
+  --muted: #9998ad;
+  --muted-2: #6d6c82;
+  --radius: 18px;
+  --grad: linear-gradient(120deg, var(--magenta), var(--violet) 50%, var(--cyan));
+}
+
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Inter', system-ui, sans-serif;
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ambient circuit-line / glow backdrop, used on every page */
+body::before{
+  content:"";
+  position:fixed; inset:0;
+  z-index:0;
+  pointer-events:none;
+  background-image:
+    radial-gradient(circle at 12% 8%, rgba(255,46,200,0.08), transparent 40%),
+    radial-gradient(circle at 88% 18%, rgba(43,232,255,0.08), transparent 42%),
+    radial-gradient(circle at 50% 95%, rgba(155,92,255,0.07), transparent 45%);
+}
+
+.wrap{position:relative; z-index:1; max-width:1080px; margin:0 auto; padding:0 24px 120px;}
+
+/* ---------- Typography ---------- */
+h1,h2,h3{
+  font-family:'Barlow Condensed', sans-serif;
+  font-style:italic;
+  font-weight:700;
+  letter-spacing:0.01em;
+  margin:0;
+  text-transform:uppercase;
+}
+
+.eyebrow{
+  display:inline-flex; align-items:center; gap:8px;
+  font-family:'JetBrains Mono', monospace;
+  font-size:12px; letter-spacing:0.14em; text-transform:uppercase;
+  color:var(--cyan);
+  border:1px solid rgba(43,232,255,0.35);
+  background:rgba(43,232,255,0.06);
+  padding:6px 12px; border-radius:100px;
+}
+.eyebrow::before{content:"●"; color:var(--magenta); font-size:8px;}
+
+.tag{
+  font-family:'JetBrains Mono', monospace; font-size:11px; letter-spacing:0.08em;
+  color:var(--muted); border:1px solid var(--line); border-radius:8px; padding:5px 10px;
+  display:inline-block;
+}
+
+/* ---------- Buttons ---------- */
+.btn{
+  font-family:'JetBrains Mono', monospace; font-size:12.5px; letter-spacing:0.06em; text-transform:uppercase;
+  background:transparent; color:var(--text); border:1px solid var(--line);
+  border-radius:100px; padding:10px 20px; cursor:pointer; transition:all .15s ease;
+  text-decoration:none; display:inline-flex; align-items:center; gap:8px;
+}
+.btn:hover:not(:disabled){border-color:var(--cyan); color:var(--cyan);}
+.btn:disabled{opacity:0.3; cursor:not-allowed;}
+.btn.primary{background:var(--grad); border:none; color:#08060c; font-weight:700;}
+.btn.primary:hover{filter:brightness(1.08);}
+
+/* ---------- Cards & sections ---------- */
+.card{
+  background:var(--panel); border:1px solid var(--line); border-radius:var(--radius);
+  padding:24px;
+}
+section{padding:56px 0;}
+section + section{border-top:1px solid var(--line);}
+.section-head{margin-bottom:28px;}
+.section-head .eyebrow{margin-bottom:14px;}
+.section-head h2{font-size:clamp(26px,3.4vw,36px); color:var(--text);}
+
+/* ---------- Footer ---------- */
+footer{
+  padding:40px 0 10px; display:flex; justify-content:space-between; align-items:center;
+  flex-wrap:wrap; gap:10px; color:var(--muted-2); font-family:'JetBrains Mono', monospace; font-size:11.5px;
+  letter-spacing:0.06em;
+}
+footer b{color:var(--muted); font-weight:600;}
+footer a{color:var(--muted-2); text-decoration:none;}
+footer a:hover{color:var(--cyan);}
+
+/* ---------- Scrollbar (webkit) ---------- */
+::-webkit-scrollbar{width:10px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:var(--panel-2); border-radius:100px;}
+
+@media (max-width: 760px){
+  .wrap{padding:0 18px 100px;}
+}
