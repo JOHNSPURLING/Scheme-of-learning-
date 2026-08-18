@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prisms — Maths Toolkit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,500;0,600;0,700;1,600;1,700;1,800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+  .hero{padding:40px 0 30px; border-bottom:1px solid var(--line);}
+  .hero-top{display:flex; align-items:center; gap:14px; margin-bottom:14px;}
+  .logomark{width:34px; height:34px; flex-shrink:0; filter:drop-shadow(0 0 8px rgba(155,92,255,0.4));}
+  .hero h1{
+    font-size:clamp(30px, 4.6vw, 48px); line-height:1.02; margin:0 0 14px;
+    background:var(--grad); -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .hero .big-q{font-family:'Inter'; font-style:normal; font-weight:600; font-size:17px; color:var(--text); max-width:60ch; margin:0 0 14px;}
+  .meta-row{display:flex; gap:10px; flex-wrap:wrap;}
+
+  .stuck-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:14px;}
+  .bubble{background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:18px 20px; position:relative; font-size:15px; color:#e6e5f5;}
+  .bubble::before{content:"\201C"; font-family:'Barlow Condensed', serif; font-size:40px; font-style:italic; position:absolute; top:-4px; left:12px; color:var(--magenta); opacity:0.5;}
+  .bubble p{margin:0; padding-left:12px;}
+
+  .rule-card{
+    background:linear-gradient(160deg, rgba(255,46,200,0.08), rgba(43,232,255,0.05));
+    border:1px solid rgba(255,46,200,0.28); border-radius:var(--radius); padding:26px clamp(18px,4vw,36px);
+  }
+  .rule-card p{font-size:clamp(17px,2vw,20px); font-weight:600; color:#fff; margin:0; max-width:72ch;}
+
+  .why-grid{display:grid; grid-template-columns:1fr 1fr; gap:24px;}
+  .why-grid h3{font-size:19px; color:var(--cyan); margin-bottom:8px; font-style:normal; letter-spacing:0.02em;}
+  .why-grid p{color:#d8d7ea; font-size:14.5px; margin:0;}
+
+  .example-card{background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:clamp(20px,4vw,30px);}
+  .example-chip{
+    font-family:'JetBrains Mono', monospace; font-size:clamp(16px,2.4vw,19px); color:var(--cyan);
+    background:rgba(43,232,255,0.06); border:1px solid rgba(43,232,255,0.25); border-radius:12px;
+    padding:14px 18px; margin-bottom:10px;
+  }
+  .example-chip:last-child{margin-bottom:0;}
+
+  .misc-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:14px;}
+  .flip{perspective:1200px; height:200px;}
+  .flip-inner{position:relative; width:100%; height:100%; transition:transform .5s cubic-bezier(.4,.2,.2,1); transform-style:preserve-3d; cursor:pointer;}
+  .flip.flipped .flip-inner{transform:rotateY(180deg);}
+  .flip-face{position:absolute; inset:0; backface-visibility:hidden; border-radius:16px; padding:18px; display:flex; flex-direction:column; justify-content:space-between; border:1px solid var(--line);}
+  .flip-front{background:var(--panel-2);}
+  .flip-front .x{color:var(--magenta); font-family:'JetBrains Mono'; font-size:11px; letter-spacing:0.08em;}
+  .flip-front p{font-size:14px; color:#e6e5f5; margin:8px 0 0;}
+  .flip-front .tap{color:var(--muted-2); font-size:11px; font-family:'JetBrains Mono', monospace;}
+  .flip-back{background:linear-gradient(160deg, rgba(43,232,255,0.10), rgba(155,92,255,0.08)); transform:rotateY(180deg); border-color:rgba(43,232,255,0.35);}
+  .flip-back .check{color:var(--cyan); font-family:'JetBrains Mono'; font-size:11px; letter-spacing:0.08em;}
+  .flip-back p{font-size:13px; color:#eef; margin:8px 0 0;}
+
+  .nav-row{display:flex; justify-content:space-between; align-items:center; gap:12px; padding:20px 0; flex-wrap:wrap;}
+
+  @media (max-width: 760px){
+    .stuck-grid, .why-grid{grid-template-columns:1fr;}
+    .misc-grid{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <p style="padding-top:20px;"><a class="btn" href="../index.html">← All topics</a></p>
+
+  <header class="hero">
+    <div class="hero-top">
+      <svg class="logomark" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="50,10 90,88 10,88" fill="none" stroke="rgba(255,255,255,0.14)" stroke-width="2"/>
+        <ellipse cx="50" cy="34" rx="26" ry="5" fill="none" stroke="#ff2ec8" stroke-width="2.2"/>
+        <ellipse cx="50" cy="52" rx="17" ry="4" fill="none" stroke="#c85fe0" stroke-width="2.2"/>
+        <ellipse cx="50" cy="68" rx="9" ry="3" fill="none" stroke="#9b5cff" stroke-width="2.2"/>
+        <circle cx="50" cy="80" r="2" fill="#2be8ff"/>
+      </svg>
+      <span class="eyebrow">Unit 8 · Topic 15 · Geometry</span>
+    </div>
+    <h1>Prisms</h1>
+    <p class="big-q">How can we recognise a prism?</p>
+    <div class="meta-row">
+      <span class="tag">GCSE · Geometry</span>
+    </div>
+  </header>
+
+  <section>
+    <div class="section-head">
+      <span class="eyebrow">Where students get stuck</span>
+      <h2>The questions in the room</h2>
+    </div>
+    <div class="stuck-grid">
+      <div class="bubble"><p>What actually defines a prism's cross-section?</p></div>
+      <div class="bubble"><p>Could a pyramid be mistaken for a prism?</p></div>
+      <div class="bubble"><p>Why does the cross-section have to stay the same all the way through?</p></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head">
+      <span class="eyebrow">The rule</span>
+      <h2>What to remember</h2>
+    </div>
+    <div class="rule-card">
+      <p>A prism is a 3D object whose cross-section is the same all through its length.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head">
+      <span class="eyebrow">Why it matters</span>
+      <h2>The bigger picture</h2>
+    </div>
+    <div class="why-grid">
+      <div class="card">
+        <h3>The explanation</h3>
+        <p>A prism is a 3D object whose cross-section is the same all through its length. Students need to identify the constant cross-section and the direction of the prism's length.</p>
+      </div>
+      <div class="card">
+        <h3>Why it's worth knowing</h3>
+        <p>Translating one fixed 2D region through a distance creates a prism.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head">
+      <span class="eyebrow">Worked example</span>
+      <h2>See it in action</h2>
+    </div>
+    <div class="example-card">
+      <div class="example-chip">A triangular prism has the same triangular cross-section at every point along its length</div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head">
+      <span class="eyebrow">Common misconceptions</span>
+      <h2>Tap a card to check yourself</h2>
+    </div>
+    <div class="misc-grid">
+      <div class="flip">
+        <div class="flip-inner">
+          <div class="flip-face flip-front">
+            <div><span class="x">✕ Misconception</span><p>Calling pyramids prisms, using an end face that changes shape</p></div>
+            <span class="tap">Tap to reveal</span>
+          </div>
+          <div class="flip-face flip-back">
+            <div><span class="check">✓ Fix</span><p>Address this directly when it comes up — name the misconception, then re-show the correct method against it.</p></div>
+          </div>
+        </div>
+      </div>
+      <div class="flip">
+        <div class="flip-inner">
+          <div class="flip-face flip-front">
+            <div><span class="x">✕ Misconception</span><p>Confusing cross-section with surface face</p></div>
+            <span class="tap">Tap to reveal</span>
+          </div>
+          <div class="flip-face flip-back">
+            <div><span class="check">✓ Fix</span><p>Address this directly when it comes up — name the misconception, then re-show the correct method against it.</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="nav-row">
+    <a class="btn" href="../index.html">← All topics</a>
+  </div>
+
+  <footer>
+    <span>GCSE Maths Tools</span>
+    <span>Unit 8 · Topic 15 · Prisms</span>
+  </footer>
+
+</div>
+
+<script>
+  document.querySelectorAll('.flip').forEach(card => {
+    card.addEventListener('click', () => card.classList.toggle('flipped'));
+  });
+</script>
+
+</body>
+</html>
